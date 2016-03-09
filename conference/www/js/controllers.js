@@ -39,12 +39,30 @@ angular.module('starter.controllers', ['starter.services'])
       $scope.closeLogin();
     }, 1000);
   };
-})
 
-.controller('SessionsCtrl', function($scope, Session) {
-    $scope.sessions = Session.query();
-})
 
-.controller('SessionCtrl', function($scope, $stateParams, Session) {
-    $scope.session = Session.get({sessionId: $stateParams.sessionId});
-});
+}).controller('SessionsCtrl', function($scope) {
+	var vm = this;
+	$scope.txt = {};
+	$scope.add_session = function () {
+		var session_title = $scope.txt.session_title;
+		socket.emit('addSessions', { title:session_title});
+	}
+	socket.emit('getSessions', { get:"true"});
+	socket.on('sessions', function (data) {
+		var sessions = data.session;
+		setTimeout(function () {
+			$scope.$apply(function () {
+				$scope.sessions = sessions
+			});
+		},500);
+	});
+}).controller('SessionCtrl', function($scope, $stateParams) {
+	//var socket = io('http://localhost:5000');
+	var data = {sessionId: $stateParams.sessionId};
+    $scope.session = socket.emit('session', data);
+	socket.on('session_passed', function (data) {
+		$scope.session = data.session;
+	});
+}); 
+
