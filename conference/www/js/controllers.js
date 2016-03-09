@@ -1,6 +1,6 @@
 angular.module('starter.controllers', ['starter.services'])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout,socket) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -41,7 +41,7 @@ angular.module('starter.controllers', ['starter.services'])
   };
 
 
-}).controller('SessionsCtrl', function($scope) {
+}).controller('SessionsCtrl', function($scope,socket) {
 	var vm = this;
 	$scope.txt = {};
 	$scope.add_session = function () {
@@ -51,14 +51,14 @@ angular.module('starter.controllers', ['starter.services'])
 	socket.emit('getSessions', { get:"true"});
 	socket.on('sessions', function (data) {
 		var sessions = data.session;
+		//console.log(data);
 		setTimeout(function () {
 			$scope.$apply(function () {
 				$scope.sessions = sessions
 			});
 		},500);
 	});
-}).controller('SessionCtrl', function($scope, $stateParams) {
-	//var socket = io('http://localhost:5000');
+}).controller('SessionCtrl', function($scope, $stateParams,socket) {
 	var data = {sessionId: $stateParams.sessionId};
     $scope.session = socket.emit('session', data);
 	socket.on('session_passed', function (data) {

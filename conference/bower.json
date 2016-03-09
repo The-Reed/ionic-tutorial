@@ -4,6 +4,7 @@
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.2.4",
 	"socket.io-client": "^1.4.5",
+	"angular-socket-io": "latest",
 	"ngOpenFB": "latest"
   }
 }
